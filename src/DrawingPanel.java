@@ -127,6 +127,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			case 53 -> current.currentMode = FractalDrawer.ColorMode.CANDY;
 			case 54 -> current.currentMode = FractalDrawer.ColorMode.ROYAL;
 			case 55 -> current.currentMode = FractalDrawer.ColorMode.STAT;
+			case 56 -> { current.randomizePalette(); current.currentMode = FractalDrawer.ColorMode.RANDOM; }
 		}
 	}
 

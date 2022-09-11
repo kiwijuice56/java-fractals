@@ -7,12 +7,12 @@ public class FractalDrawer {
 	public double cornerX = -2.5, cornerY = -2.0, zoom = 3.5;
 	public double mouseX = 0, mouseY = 0;
 	// n is the number of iterations, while resolution is the ratio of the size of a rendered pixel to an actual pixel
-	public int n = 8, resolution = 2;
+	public int n = 12, resolution = 2;
 	// number of dimensions for the escape fractals
 	public int d = 2;
 
-	public enum ColorMode { PURPLE, RAINBOW, WHITE, BLACK, CANDY, ROYAL, STAT }
-	public ColorMode currentMode = ColorMode.PURPLE;
+	public enum ColorMode { PURPLE, RAINBOW, WHITE, BLACK, CANDY, ROYAL, STAT, RANDOM }
+	public ColorMode currentMode = ColorMode.ROYAL;
 
 	private static final Color[] candyPalette = {
 			new Color(115,90,190),
@@ -30,6 +30,15 @@ public class FractalDrawer {
 			new Color(255, 170,   0),
 			new Color(  86,   0,   5)};
 	private static final float[] royalPos = {0.0f, 0.16f, 0.42f, 0.6425f, 0.8575f, 1.0f};
+
+	private static Color[] randomPalette = {
+			Color.BLACK,
+			new Color(  0,   7, 100),
+			new Color( 32, 107, 203),
+			new Color(237, 255, 255),
+			new Color(255, 170,   0),
+			new Color(  86,   0,   5)};
+	private static final float[] randomPos = {0.0f, 0.16f, 0.42f, 0.6425f, 0.8575f, 1.0f};
 
 	private static final Color[] statPalette = {
 			new Color(62, 25, 110),
@@ -53,6 +62,7 @@ public class FractalDrawer {
 			case CANDY -> { return getPaletteColor(candyPos, x, candyPalette); }
 			case ROYAL -> { return getPaletteColor(royalPos, x, royalPalette); }
 			case STAT -> { return getPaletteColor(statPos, x, statPalette); }
+			case RANDOM -> { return getPaletteColor(randomPos, x, randomPalette);}
 		}
 		return Color.BLACK;
 	}
@@ -69,5 +79,10 @@ public class FractalDrawer {
 					(int) (x * col[i].getBlue() + (1.0 - x) * col[i - 1].getBlue()));
 		}
 		return Color.BLACK;
+	}
+
+	public void randomizePalette() {
+		for (int i = 0; i < randomPalette.length; i++)
+			randomPalette[i] = new Color((int)(Math.random() * 0x1000000));
 	}
 }
