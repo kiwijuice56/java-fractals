@@ -10,6 +10,7 @@ public class FractalDrawer {
 	public int n = 12, resolution = 2;
 	// number of dimensions for the escape fractals
 	public int d = 2;
+	public boolean julia = false;
 
 	public enum ColorMode { PURPLE, RAINBOW, WHITE, BLACK, CANDY, ROYAL, STAT, RANDOM }
 	public ColorMode currentMode = ColorMode.ROYAL;

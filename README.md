@@ -35,6 +35,12 @@ Programmed in Java with swing and awt graphics libraries.
 
 ### Original Creations
 - Tadpole
+  - Appearance of repeating shapes that look like tadpoles
 - Chopped Mandelbrot
-- DNA
+  - Appearance of mandelbrot without the trailing "tail"
+- Duck
+  - Appearance of a duck from above. Julia set goes to infinity on the real axis in a wave
 - Astronaut
+  - For Brandon H. Appearance of "Among Us" characters
+- Alfaro
+  - Odd values of `d` have alternating long and short gradients

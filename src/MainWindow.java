@@ -26,26 +26,13 @@ public class MainWindow extends JFrame {
         fractalDrawers.add(new MandelBoxDrawer());
         fractalDrawers.add(new TadpoleFractal());
         fractalDrawers.add(new ChoppedFractal());
-        fractalDrawers.add(new DnaFractalDrawer());
+        fractalDrawers.add(new DuckFractalDrawer());
         fractalDrawers.add(new AstronautDrawer());
+        fractalDrawers.add(new AlfaroFractalDrawer());
 
         DrawingPanel drawingPanel = new DrawingPanel();
         drawingPanel.current = fractalDrawers.get(0);
         add(drawingPanel, BorderLayout.CENTER);
-
-        JPanel buttonRow = new JPanel();
-        buttonRow.setLayout(new GridLayout(2, 6));
-
-        for (FractalDrawer drawer: fractalDrawers) {
-            JButton button = new DarkJButton(drawer.toString());
-            button.addActionListener(e -> { drawingPanel.current = drawer; drawingPanel.repaint(); });
-            buttonRow.add(button);
-        }
-        buttonRow.setBackground(Color.BLACK);
-
-        drawingPanel.grabFocus();
-
-        add(buttonRow, BorderLayout.SOUTH);
 
         JPanel infoRow = new JPanel();
 
@@ -61,6 +48,26 @@ public class MainWindow extends JFrame {
         drawingPanel.connect(positionLabel, zoomLabel, nLabel, dLabel, resLabel);
 
         add(infoRow, BorderLayout.NORTH);
+
+        JPanel buttonRow = new JPanel();
+        buttonRow.setLayout(new GridLayout(2, 6));
+
+        for (FractalDrawer drawer: fractalDrawers) {
+            JButton button = new DarkJButton(drawer.toString());
+            button.addActionListener(e -> {
+                drawingPanel.current = drawer;
+                // Update values on each click
+                drawingPanel.connect(positionLabel, zoomLabel, nLabel, dLabel, resLabel);
+                });
+            buttonRow.add(button);
+        }
+        buttonRow.setBackground(Color.BLACK);
+
+        drawingPanel.grabFocus();
+
+        add(buttonRow, BorderLayout.SOUTH);
+
+
 
         setSize(new Dimension(800, 600));
     }

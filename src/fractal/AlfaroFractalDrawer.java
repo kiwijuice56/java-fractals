@@ -2,13 +2,12 @@ package fractal;
 
 import math.ComplexNumber;
 
-public class DnaFractalDrawer extends EscapeFractalDrawer {
+public class AlfaroFractalDrawer extends EscapeFractalDrawer {
 	public int goesToInfinity(ComplexNumber c, ComplexNumber z, int n, int d) {
 		if (n == 0)
 			return 0;
 
-		z.r = Math.cos(z.r);
-		z = z.pow(d).add(c);
+		z = z.pow(d).divide(c.conjugate()).subtract(c);
 
 		if (z.r * z.r + z.i * z.i >= 4.0)
 			return 0;
@@ -18,6 +17,6 @@ public class DnaFractalDrawer extends EscapeFractalDrawer {
 
 	@Override
 	public String toString() {
-		return "[ DNA ]";
+		return "[ Alfaro ]";
 	}
 }

@@ -118,7 +118,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			case 18 -> altClicked = true;
 			case 32 -> {
 				if (current instanceof EscapeFractalDrawer)
-					((EscapeFractalDrawer) current).julia = !((EscapeFractalDrawer) current).julia;
+					current.julia = !current.julia;
 			}
 			case 49 -> current.currentMode = FractalDrawer.ColorMode.PURPLE;
 			case 50 -> current.currentMode = FractalDrawer.ColorMode.RAINBOW;

@@ -5,8 +5,6 @@ import math.ComplexNumber;
 import java.awt.*;
 
 public class EscapeFractalDrawer extends FractalDrawer {
-	public boolean julia = false;
-
 	public void draw(Graphics g, int width, int height) {
 		double imageWidth = Math.min(width, height) / (double) resolution;
 
