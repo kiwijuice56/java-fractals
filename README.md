@@ -31,8 +31,7 @@ that did or did not escape to infinity.
 - Astronaut
   - For Brandon H. Appearance of "Among Us" characters
 - Alfaro
-  - Odd values of `po
-
+  - Odd values of `power` have alternating long and short gradients
 ## Showcase
 ![demo 1](img/demo1.png)
 ![demo 2](img/demo2.png)
@@ -42,5 +41,3 @@ that did or did not escape to infinity.
 ![demo 6](img/demo6.png)
 ![demo 7](img/demo7.png)
 ![demo 8](img/demo8.png)
-
-wer` have alternating long and short gradients
