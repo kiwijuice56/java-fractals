@@ -1,46 +1,44 @@
 # java-fractals
  
-Renders many types of escape time fractals, such as the Mandelbrot set, the Julia set, and the Mandelbox set.
-Programmed in Java with swing and awt graphics libraries. 
+A fractal exploration program with many types of fractals, such as the Mandelbrot set, 
+the 3D Sierpinski triangle, and the Newton fractal (full list below).
 
-## Controls
-`mousewheel`: Zoom in/out
+Features a fully navigable interface with many parameters for custom fractals.
 
-`click + drag`: Move around the fractal space
-
-`ctrl + mousewheel`: Changes the resolution
-
-`alt + mousewheel`: Changes `d`, the power that `z` is taken to
-
-`shift + mousewheel`: Changes `n`, the amount of iterations
-
-`space`: Renders the Julia sets of the fractal
-
-`1 - 8`: Changes the palette
+Programmed from entirely scratch in Java, using only Swing and AWT graphics libraries for the interface. 
 
 ## Showcase
-![demo mandelbrot](img/mandelbrot.png)
-![demo dna](img/dnafractal.png)
-![demo julia](img/julia.png)
-![demo newton](img/newton.png)
-![demo buddhabrot](img/buddhabrot.png)
+![demo 1](img/demo1.png)
+![demo 2](img/demo2.png)
+![demo 3](img/demo3.png)
+![demo 4](img/demo4.png)
+![demo 5](img/demo5.png)
+![demo 6](img/demo6.png)
+![demo 7](img/demo7.png)
+![demo 8](img/demo8.png)
 
-## Current Fractals
+## Fractal list
+The program currently has 12 distinct fractals, but more combinations can
+be created by exploring the multibrot and Julia sets of each fractal.
+Fractals can be rendered using probabilistic plots of the trajectories of points
+that did or did not escape to infinity.
+
 - Mandelbrot
 - Tricorn
 - Burning Ship
-- Buddhabrot
 - Newton (z^3 - 1, but code supports more functions)
-- Mandelbox (cross sections)
+- Mandelbox (cross-section view)
+- Sierpinski Triangle
+- Sierpinski Triangle 3D
 
 ### Original Creations
 - Tadpole
   - Appearance of repeating shapes that look like tadpoles
-- Chopped Mandelbrot
+- Flatworm
   - Appearance of mandelbrot without the trailing "tail"
 - Duck
   - Appearance of a duck from above. Julia set goes to infinity on the real axis in a wave
 - Astronaut
   - For Brandon H. Appearance of "Among Us" characters
 - Alfaro
-  - Odd values of `d` have alternating long and short gradients
+  - Odd values of `power` have alternating long and short gradients
