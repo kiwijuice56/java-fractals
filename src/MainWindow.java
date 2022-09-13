@@ -28,29 +28,23 @@ public class MainWindow extends JFrame {
         fractalDrawers.add(new Duck());
         fractalDrawers.add(new Astronaut());
         fractalDrawers.add(new Alfaro());
+        fractalDrawers.add(new SierpinskiTriangle());
+        fractalDrawers.add(new SierpinskiTriangle3D());
 
         DrawingPanel drawingPanel = new DrawingPanel();
         drawingPanel.current = fractalDrawers.get(0);
         add(drawingPanel, BorderLayout.CENTER);
 
-        JPanel infoRow = new JPanel();
-
-        JLabel infoLabel = new DarkJLabel();
-
-        infoRow.setBackground(Color.BLACK);
-        infoRow.add(infoLabel);
-
        // add(infoRow, BorderLayout.NORTH);
 
         JPanel buttonRow = new JPanel();
-        buttonRow.setLayout(new GridLayout(2, 6));
+        buttonRow.setLayout(new GridLayout(12, 1));
 
         for (Fractal drawer: fractalDrawers) {
             JButton button = new DarkJButton(drawer.getName());
             button.addActionListener(e -> {
                 drawingPanel.current = drawer;
                 // Update values on each click
-                infoLabel.setText(drawingPanel.current.toString());
                 });
             buttonRow.add(button);
         }
@@ -58,34 +52,27 @@ public class MainWindow extends JFrame {
 
         drawingPanel.grabFocus();
 
-        add(buttonRow, BorderLayout.SOUTH);
+        add(buttonRow, BorderLayout.EAST);
 
 
         setSize(new Dimension(800, 600));
     }
 
-   public static void main(String[] args) {
-		MainWindow m = new MainWindow();
-        while (true)
-            m.repaint();
-   }
+        public static void main(String[] args) {
+            MainWindow m = new MainWindow();
+            while (true)
+                m.repaint();
+    }
 
-   class DarkJLabel extends JLabel {
-       public DarkJLabel() {
-           setForeground(Color.WHITE);
-           setFont(new Font("Consolas", Font.BOLD, 12));
-       }
-   }
-
-    class DarkJButton extends JButton {
+    static class DarkJButton extends JButton {
         public DarkJButton(String text) {
             super(text);
             setFocusable(false);
-            setFont(new Font("Consolas", Font.BOLD, 12));
+            setFont(new Font("Consolas", Font.PLAIN, 12));
             setBackground(Color.BLACK);
             setForeground(Color.WHITE);
             setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-            setPreferredSize(new Dimension(256, 24));
+            setPreferredSize(new Dimension(128, 14));
         }
     }
 }

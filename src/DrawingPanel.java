@@ -33,10 +33,12 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 		if (hideText)
 			return;
 
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, 180, 394);
+		g.setColor(new Color(0, 0, 0, 190));
+		g.fillRect(0, 0, 228, 394);
 
 		g.setColor(Color.WHITE);
+		g.setFont(new Font("Consolas", Font.PLAIN, 12));
+
 		String out = current.toString();
 		int lineStart = 16;
 		for (String line : out.split("\n")) {
@@ -75,7 +77,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (shiftClicked) {
 			current.n -= e.getWheelRotation();
-			current.n = Math.max(1, current.n);
+			current.n = Math.max(2, current.n);
 		} else if (ctrlClicked) {
 			current.pxSize -= e.getWheelRotation();
 			current.pxSize = Math.max(1, current.pxSize);
