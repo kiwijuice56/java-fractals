@@ -1,5 +1,5 @@
-import fractal.EscapeFractalDrawer;
-import fractal.FractalDrawer;
+import fractal.Fractal;
+import graphics.ColorInterpolation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,13 +7,12 @@ import java.awt.event.*;
 
 // Contains button interface and controls which fractal is active
 public class DrawingPanel extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener, KeyListener {
-	protected FractalDrawer current;
-	private boolean shiftClicked = false, ctrlClicked = false, altClicked = false;
+	protected Fractal current;
+
+	private boolean shiftClicked = false, ctrlClicked = false, altClicked = false, hideText = false, lockMouse = false;
+
 	// Used to keep track of mouse clicks and drags for scrolling
 	private double initialX = 0, initialY = 0, offsetX, offsetY;
-
-	// Connected text outputs
-	private JLabel positionLabel, zoomLabel, nLabel, dLabel, resLabel;
 
 	public DrawingPanel() {
 		addMouseMotionListener(this);
@@ -22,25 +21,28 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 		addKeyListener(this);
 	}
 
-	public void connect(JLabel positionLabel, JLabel zoomLabel, JLabel nLabel, JLabel dLabel, JLabel resLabel) {
-		this.positionLabel = positionLabel;
-		positionLabel.setText("(%.4f, %.4f), ".formatted(current.cornerX, current.cornerY));
-		this.zoomLabel = zoomLabel;
-		zoomLabel.setText("scale = %.4f, ".formatted(current.zoom));
-		this.nLabel = nLabel;
-		nLabel.setText("n = %d, ".formatted(current.n));
-		this.dLabel = dLabel;
-		dLabel.setText("d = %d, ".formatted(current.d));
-		this.resLabel = resLabel;
-		resLabel.setText("1 render px : %d px".formatted(current.resolution));
-	}
-
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		current.draw(g, getWidth(), getHeight());
+
+		current.setDimensions(getWidth(), getHeight());
+		current.draw(g);
+
+		if (hideText)
+			return;
+
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 180, 394);
+
+		g.setColor(Color.WHITE);
+		String out = current.toString();
+		int lineStart = 16;
+		for (String line : out.split("\n")) {
+			g.drawString(line, 16, lineStart);
+			lineStart += 16;
+		}
 	}
 
 	@Override
@@ -58,11 +60,8 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			initialY = (double) e.getY() / getHeight();
 		}
 
-		current.cornerX += dragX;
-		current.cornerY += dragY;
-
-		if (positionLabel != null)
-			positionLabel.setText("(%.4f, %.4f), ".formatted(current.cornerX, current.cornerY));
+		current.posX += dragX;
+		current.posY += dragY;
 	}
 
 	@Override
@@ -77,37 +76,30 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 		if (shiftClicked) {
 			current.n -= e.getWheelRotation();
 			current.n = Math.max(1, current.n);
-			if (nLabel != null)
-				nLabel.setText("n = %d, ".formatted(current.n));
 		} else if (ctrlClicked) {
-			current.resolution -= e.getWheelRotation();
-			current.resolution = Math.max(1, current.resolution);
-			if (resLabel != null)
-				resLabel.setText("1 render px : %d px".formatted(current.resolution));
+			current.pxSize -= e.getWheelRotation();
+			current.pxSize = Math.max(1, current.pxSize);
 		} else if (altClicked) {
-			current.d -= e.getWheelRotation();
-			current.d = Math.max(2, current.d);
-			if (dLabel != null)
-				dLabel.setText("d = %d, ".formatted(current.d));
+			current.exp -= e.getWheelRotation();
+			current.exp = Math.max(2, current.exp);
 		} else {
 			// Shift to keep zoom in the center
-			current.cornerX -= Math.signum(e.getWheelRotation()) * getWidth() / getHeight() * 0.1 * current.zoom / 2;
-			current.cornerY -= Math.signum(e.getWheelRotation()) * 0.1 * current.zoom / 2;
+			double imageSize = Math.min(getWidth(), getHeight());
+			current.posX -= Math.signum(e.getWheelRotation()) * getWidth() / imageSize * 0.1 * current.zoom / 2;
+			current.posY -= Math.signum(e.getWheelRotation()) * getHeight() / imageSize * 0.1 * current.zoom / 2;
 			// Change zoom by 10% in either direction
 			current.zoom *= e.getWheelRotation() > 0 ? 1.1 : 0.9;
-			if (zoomLabel != null)
-				zoomLabel.setText("scale = %.4f, ".formatted(current.zoom));
-			if (positionLabel != null)
-				positionLabel.setText("(%.4f, %.4f), ".formatted(current.cornerX, current.cornerY));
 		}
 
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		if (lockMouse)
+			return;
 		double imageWidth = Math.min(getWidth(), getHeight());
-		current.mouseX = current.cornerX + current.zoom * (double) e.getX() / imageWidth;
-		current.mouseY = current.cornerY + current.zoom * (double) e.getY() / imageWidth;
+		current.mouseX = current.posX + current.zoom * (double) e.getX() / imageWidth;
+		current.mouseY = current.posY + current.zoom * (double) e.getY() / imageWidth;
 	}
 
 	@Override
@@ -116,18 +108,20 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			case 16 -> shiftClicked = true;
 			case 17 -> ctrlClicked = true;
 			case 18 -> altClicked = true;
-			case 32 -> {
-				if (current instanceof EscapeFractalDrawer)
-					current.julia = !current.julia;
-			}
-			case 49 -> current.currentMode = FractalDrawer.ColorMode.PURPLE;
-			case 50 -> current.currentMode = FractalDrawer.ColorMode.RAINBOW;
-			case 51 -> current.currentMode = FractalDrawer.ColorMode.WHITE;
-			case 52 -> current.currentMode = FractalDrawer.ColorMode.BLACK;
-			case 53 -> current.currentMode = FractalDrawer.ColorMode.CANDY;
-			case 54 -> current.currentMode = FractalDrawer.ColorMode.ROYAL;
-			case 55 -> current.currentMode = FractalDrawer.ColorMode.STAT;
-			case 56 -> { current.randomizePalette(); current.currentMode = FractalDrawer.ColorMode.RANDOM; }
+			case 76 -> lockMouse = !lockMouse;
+			case 77 -> current.useMousePos = !current.useMousePos;
+			case 72 -> hideText = !hideText;
+			case 81 -> current.currentDrawMode = Fractal.DrawMode.NORMAL;
+			case 87 -> current.currentDrawMode = Fractal.DrawMode.PLOT;
+			case 69 -> current.currentDrawMode = Fractal.DrawMode.PLOT_INVERSE;
+			case 49 -> current.colorPalette = ColorInterpolation.ColorMode.PURPLE;
+			case 50 -> current.colorPalette = ColorInterpolation.ColorMode.RAINBOW;
+			case 51 -> current.colorPalette = ColorInterpolation.ColorMode.WHITE;
+			case 52 -> current.colorPalette = ColorInterpolation.ColorMode.BLACK;
+			case 53 -> current.colorPalette = ColorInterpolation.ColorMode.CANDY;
+			case 54 -> current.colorPalette = ColorInterpolation.ColorMode.ROYAL;
+			case 55 -> current.colorPalette = ColorInterpolation.ColorMode.STAT;
+			case 56 -> { ColorInterpolation.randomizePalette(); current.colorPalette = ColorInterpolation.ColorMode.RANDOM; }
 		}
 	}
 

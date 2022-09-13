@@ -17,18 +17,17 @@ public class MainWindow extends JFrame {
 
         setLayout(new BorderLayout());
 
-        List<FractalDrawer> fractalDrawers = new ArrayList<>();
-        fractalDrawers.add(new MandelbrotDrawer());
+        List<Fractal> fractalDrawers = new ArrayList<>();
+        fractalDrawers.add(new Mandelbrot());
         fractalDrawers.add(new TricornDrawer());
-        fractalDrawers.add(new BurningShipDrawer());
-        fractalDrawers.add(new BuddhabrotDrawer());
-        fractalDrawers.add(new NewtonFractal());
-        fractalDrawers.add(new MandelBoxDrawer());
-        fractalDrawers.add(new TadpoleFractal());
-        fractalDrawers.add(new ChoppedFractal());
-        fractalDrawers.add(new DuckFractalDrawer());
-        fractalDrawers.add(new AstronautDrawer());
-        fractalDrawers.add(new AlfaroFractalDrawer());
+        fractalDrawers.add(new BurningShip());
+        fractalDrawers.add(new Newton());
+        fractalDrawers.add(new Mandelbox());
+        fractalDrawers.add(new Tadpole());
+        fractalDrawers.add(new Flatworm());
+        fractalDrawers.add(new Duck());
+        fractalDrawers.add(new Astronaut());
+        fractalDrawers.add(new Alfaro());
 
         DrawingPanel drawingPanel = new DrawingPanel();
         drawingPanel.current = fractalDrawers.get(0);
@@ -36,28 +35,22 @@ public class MainWindow extends JFrame {
 
         JPanel infoRow = new JPanel();
 
-        JLabel positionLabel = new DarkJLabel();
-        JLabel zoomLabel = new DarkJLabel();
-        JLabel nLabel = new DarkJLabel();
-        JLabel dLabel = new DarkJLabel();
-        JLabel resLabel = new DarkJLabel();
+        JLabel infoLabel = new DarkJLabel();
+
         infoRow.setBackground(Color.BLACK);
+        infoRow.add(infoLabel);
 
-        infoRow.add(positionLabel); infoRow.add(zoomLabel); infoRow.add(nLabel); infoRow.add(dLabel); infoRow.add(resLabel);
-
-        drawingPanel.connect(positionLabel, zoomLabel, nLabel, dLabel, resLabel);
-
-        add(infoRow, BorderLayout.NORTH);
+       // add(infoRow, BorderLayout.NORTH);
 
         JPanel buttonRow = new JPanel();
         buttonRow.setLayout(new GridLayout(2, 6));
 
-        for (FractalDrawer drawer: fractalDrawers) {
-            JButton button = new DarkJButton(drawer.toString());
+        for (Fractal drawer: fractalDrawers) {
+            JButton button = new DarkJButton(drawer.getName());
             button.addActionListener(e -> {
                 drawingPanel.current = drawer;
                 // Update values on each click
-                drawingPanel.connect(positionLabel, zoomLabel, nLabel, dLabel, resLabel);
+                infoLabel.setText(drawingPanel.current.toString());
                 });
             buttonRow.add(button);
         }
@@ -66,7 +59,6 @@ public class MainWindow extends JFrame {
         drawingPanel.grabFocus();
 
         add(buttonRow, BorderLayout.SOUTH);
-
 
 
         setSize(new Dimension(800, 600));

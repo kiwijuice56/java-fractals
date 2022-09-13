@@ -2,12 +2,13 @@ package fractal;
 
 import math.ComplexNumber;
 
-public class TricornDrawer extends Fractal {
+public class Astronaut extends Fractal {
 	public int escapesSet(ComplexNumber c, ComplexNumber z, int n) {
 		if (n == 0)
 			return 0;
 
-		z = z.conjugate().pow(exp).add(c);
+		z.r = z.r * Math.pow(Math.E, z.r) / 2.0;
+		z = z.pow(exp).conjugate().add(c);
 
 		if (z.r * z.r + z.i * z.i >= 4.0)
 			return 0;
@@ -19,6 +20,6 @@ public class TricornDrawer extends Fractal {
 	}
 
 	public String getName() {
-		return "tricorn";
+		return "astronaut";
 	}
 }
