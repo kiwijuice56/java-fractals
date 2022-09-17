@@ -119,7 +119,8 @@ public class Fractal {
 				"%.6f scale\n".formatted(zoom) +
 				"\n[fractal]\n"+
 				getName() + "\n" +
-				"n = %d, power = %d\n".formatted(n, exp) +
+				"n = %d\n".formatted(n) +
+				"power = %d\n".formatted(exp) +
 				"\n[render]\n"+
 				"mode: %s\n".formatted(currentDrawMode.name()) +
 				"palette: %s\n".formatted(colorPalette.name()) +
@@ -131,7 +132,7 @@ public class Fractal {
 				"wheel + alt: power\n" +
 				"wheel + shift: n\n" +
 				"0 - 9: palette\n" +
-				"Q W E keys: render mode\n" +
+				"Q/W/E: render mode\n" +
 				"M: use mouse\n" +
 				"L: lock mouse\n" +
 				"H: hide help";

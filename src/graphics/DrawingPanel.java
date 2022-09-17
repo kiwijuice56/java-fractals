@@ -12,6 +12,7 @@ import java.awt.image.Raster;
 // Contains button interface and controls which fractal is active
 public class DrawingPanel extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener, KeyListener {
 	protected Fractal current;
+	private static final Font FONT = new Font("Consolas", Font.PLAIN, 12);
 
 	// Toggles to keep status of state
 	private boolean shiftClicked = false, ctrlClicked = false, altClicked = false, hideText = false, lockMouse = false;
@@ -45,10 +46,10 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			return;
 
 		g.setColor(new Color(0, 0, 0, 190));
-		g.fillRect(0, 0, 228, 394);
+		g.fillRect(0, 0, 228, 410);
 
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Consolas", Font.PLAIN, 12));
+		g.setFont(FONT);
 
 		String out = current.toString();
 		int lineStart = 16;
@@ -121,12 +122,16 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			case 16 -> shiftClicked = true;
 			case 17 -> ctrlClicked = true;
 			case 18 -> altClicked = true;
+			// Toggles
 			case 76 -> lockMouse = !lockMouse;
 			case 77 -> current.useMousePos = !current.useMousePos;
 			case 72 -> hideText = !hideText;
+			// Keys for draw modes
 			case 81 -> current.currentDrawMode = Fractal.DrawMode.NORMAL;
 			case 87 -> current.currentDrawMode = Fractal.DrawMode.PLOT;
 			case 69 -> current.currentDrawMode = Fractal.DrawMode.PLOT_INVERSE;
+			// Keys for color palettes
+			case 48 -> { ColorInterpolation.randomizePalette(); current.colorPalette = ColorInterpolation.ColorMode.RANDOM; }
 			case 49 -> current.colorPalette = ColorInterpolation.ColorMode.PURPLE;
 			case 50 -> current.colorPalette = ColorInterpolation.ColorMode.RAINBOW;
 			case 51 -> current.colorPalette = ColorInterpolation.ColorMode.WHITE;
@@ -136,7 +141,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			case 55 -> current.colorPalette = ColorInterpolation.ColorMode.STAT;
 			case 56 -> current.colorPalette = ColorInterpolation.ColorMode.FROST;
 			case 57 -> current.colorPalette = ColorInterpolation.ColorMode.TREE;
-			case 58 -> { ColorInterpolation.randomizePalette(); current.colorPalette = ColorInterpolation.ColorMode.RANDOM; }
+
 		}
 	}
 
@@ -157,8 +162,9 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	public void drawPixel(int x, int y, Color c) {
 		if (x < 0 || y < 0 || x >= getWidth() || y >= getHeight())
 			return;
-		out[(y) * (getWidth() * 3) + (x * 3)] = (byte) c.getBlue();
-		out[(y) * (getWidth() * 3) + (x * 3 + 1)] = (byte) c.getGreen();
-		out[(y) * (getWidth() * 3) + (x * 3 + 2)] = (byte) c.getRed();
+		int idx = (y) * (getWidth() * 3) + (x * 3);
+		out[idx] = (byte) c.getBlue();
+		out[idx + 1] = (byte) c.getGreen();
+		out[idx + 2] = (byte) c.getRed();
 	}
 }

@@ -4,16 +4,19 @@ import fractal.*;
 
 import java.awt.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class MainWindow extends JFrame {
 
     // Initialize main window
-    public MainWindow() {
-        setTitle("Alfaro Fractals");
+    public MainWindow() throws IOException {
+        setTitle("Fractals");
+        setIconImage(ImageIO.read(getClass().getResource("/icon.png")));
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -53,9 +56,10 @@ public class MainWindow extends JFrame {
         add(buttonRow, BorderLayout.EAST);
 
         setSize(new Dimension(800, 700));
+
     }
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws IOException {
             MainWindow m = new MainWindow();
             while (true)
                 m.repaint();

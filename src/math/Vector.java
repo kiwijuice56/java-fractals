@@ -23,10 +23,7 @@ public class Vector {
     }
 
     public Vector average(Vector other) {
-        return new Vector(
-                (x + other.x) / 2,
-                (y + other.y) / 2,
-                (z + other.z) / 2);
+        return new Vector((x + other.x) / 2, (y + other.y) / 2, (z + other.z) / 2);
     }
 
     public Vector scale(double scale) {
