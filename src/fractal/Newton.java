@@ -18,13 +18,14 @@ public class Newton extends Fractal {
 		posX = -1.5;
 		posY = 0.0;
 
+		colorPalette = ColorInterpolation.ColorMode.FROST;
+
 		function = new Polynomial(Arrays.asList(1.0, 0.0, 0.0, -1.0));
 		derivative = function.derivative();
 		roots = Arrays.asList(new ComplexNumber(1, 0),
 				new ComplexNumber(-0.5, Math.sqrt(3) / 2.0),
 				new ComplexNumber(-0.5, -Math.sqrt(3) / 2.0));
 	}
-
 
 	public void draw(Graphics g) {
 		for (int i = 0; i < imageHeight / pxSize; i++) {

@@ -1,8 +1,13 @@
 package fractal;
 
+import graphics.ColorInterpolation;
 import math.ComplexNumber;
 
 public class Tadpole extends Fractal {
+	public Tadpole() {
+		colorPalette = ColorInterpolation.ColorMode.WHITE;
+	}
+
 	public int escapesSet(ComplexNumber c, ComplexNumber z, int n) {
 		if (n == 0)
 			return 0;

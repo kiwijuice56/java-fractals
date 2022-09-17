@@ -34,6 +34,15 @@ public class Vector {
     }
 
     public Vector project() {
-        return new Vector(x / z, y / z, 0);
+        return new Vector(x / z, y / z, z);
+    }
+
+    public Vector normalized() {
+        double length = Math.sqrt(x * x + y * y + z * z);
+        return new Vector(x / length, y / length, z / length);
+    }
+
+    public double dot(Vector other) {
+        return other.x * x + other.y * y + other.z * z;
     }
 }

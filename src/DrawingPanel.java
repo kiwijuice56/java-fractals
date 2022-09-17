@@ -9,6 +9,7 @@ import java.awt.event.*;
 public class DrawingPanel extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener, KeyListener {
 	protected Fractal current;
 
+	// Toggles to keep status of state
 	private boolean shiftClicked = false, ctrlClicked = false, altClicked = false, hideText = false, lockMouse = false;
 
 	// Used to keep track of mouse clicks and drags for scrolling
@@ -24,6 +25,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -77,7 +79,7 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (shiftClicked) {
 			current.n -= e.getWheelRotation();
-			current.n = Math.max(2, current.n);
+			current.n = Math.max(1, current.n);
 		} else if (ctrlClicked) {
 			current.pxSize -= e.getWheelRotation();
 			current.pxSize = Math.max(1, current.pxSize);
@@ -123,7 +125,9 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 			case 53 -> current.colorPalette = ColorInterpolation.ColorMode.CANDY;
 			case 54 -> current.colorPalette = ColorInterpolation.ColorMode.ROYAL;
 			case 55 -> current.colorPalette = ColorInterpolation.ColorMode.STAT;
-			case 56 -> { ColorInterpolation.randomizePalette(); current.colorPalette = ColorInterpolation.ColorMode.RANDOM; }
+			case 56 -> current.colorPalette = ColorInterpolation.ColorMode.FROST;
+			case 57 -> current.colorPalette = ColorInterpolation.ColorMode.TREE;
+			case 58 -> { ColorInterpolation.randomizePalette(); current.colorPalette = ColorInterpolation.ColorMode.RANDOM; }
 		}
 	}
 

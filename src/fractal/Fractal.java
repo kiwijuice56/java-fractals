@@ -6,34 +6,31 @@ import math.ComplexNumber;
 import java.awt.*;
 
 public class Fractal {
-	// Due to the small scale of the program, most variables are public for convenience
+	// Due to the small scale of the program, most variables are public/protected for convenience
 
 	// Used to position and scale fractals
-	public double posX, posY, zoom = 3.5;
+	public double posX = -3.0, posY = -2.5, zoom = 4.5;
 	public double mouseX = 0, mouseY = 0;
 
-	public int n = 12, pxSize = 2, exp = 2;
+	public int n = 12, pxSize = 1, exp = 2;
 
 	public boolean useMousePos = false;
 
 	public enum DrawMode { NORMAL, PLOT, PLOT_INVERSE }
 	public DrawMode currentDrawMode = DrawMode.NORMAL;
 
-	// stores data for plots
-	protected int[][] visitedCount;
-	protected int highestVisitCount = 0;
-	protected int plottedPoints = 500000;
+	// Stores data to create a histogram colorization of the plots
+	private int[][] visitedCount;
+	private int highestVisitCount = 0;
+	private static final int POINT_PLOT_COUNT = 500000;
 
+	// Stores the dimensions of the fractal drawing window
 	protected int imageWidth, imageHeight;
 	protected double imageSize;
 
 	public ColorInterpolation.ColorMode colorPalette = ColorInterpolation.ColorMode.ROYAL;
 
-	public Fractal() {
-		posX = -2.5;
-		posY = -2.0;
-	}
-
+	// Called by external panels to paint the fractal
 	public void draw(Graphics g) {
 		if (currentDrawMode == DrawMode.NORMAL)
 			drawNormal(g);
@@ -41,6 +38,7 @@ public class Fractal {
 			drawProbabilityPlot(g);
 	}
 
+	// Normal rendering method that iterates through each px and uses the # steps to escape the set for coloring
 	private void drawNormal(Graphics g) {
 		for (int i = 0; i < imageHeight / pxSize; i++) {
 			for (int j = 0; j < imageWidth / pxSize; j++) {
@@ -48,6 +46,7 @@ public class Fractal {
 				double x = posX + zoom * j / imageSize;
 
 				int steps = escapesSet(new ComplexNumber(useMousePos ? mouseX : x, useMousePos ? mouseY : y), new ComplexNumber(x, y), n);
+				// Don't color steps that did not escape
 				if (steps == n)
 					continue;
 				if (currentDrawMode == DrawMode.NORMAL) {
@@ -58,10 +57,11 @@ public class Fractal {
 		}
 	}
 
+	// Plot rendering method that takes a random sample of points and plots their trajectories
 	private void drawProbabilityPlot(Graphics g) {
 		highestVisitCount = 0;
 		visitedCount = new int[imageHeight][imageWidth];
-		for (int p = 0; p < plottedPoints; p++) {
+		for (int p = 0; p < POINT_PLOT_COUNT; p++) {
 			double x = Math.random() * 4 - 2;
 			double y = Math.random() * 4 - 2;
 
@@ -76,11 +76,10 @@ public class Fractal {
 		}
 	}
 
-	/**
-	 * Recursive function to check if the fractal goes to infinity.
-	 * Will also plot points along the way, depending on the DrawingMode
-	 */
-	public int escapesSet(ComplexNumber c, ComplexNumber z, int n) {
+	// Recursive function to check if the fractal goes to infinity
+	// Mandelbrot by default
+	// Will also plot points along the way, depending on the DrawingMode
+	protected int escapesSet(ComplexNumber c, ComplexNumber z, int n) {
 		if (n == 0)
 			return 0;
 
@@ -95,7 +94,8 @@ public class Fractal {
 		return steps;
 	}
 
-	public void plotPoint(ComplexNumber z, int steps, int n) {
+	// Checks the drawing mode and adds point to the histogram plot if the point does/does not escape the set (depends on mode)
+	protected void plotPoint(ComplexNumber z, int steps, int n) {
 		if (	(steps != n && currentDrawMode == DrawMode.PLOT) ||
 				(steps == n && currentDrawMode == DrawMode.PLOT_INVERSE)) {
 			int pX = (int) (((z.r - posX) * imageSize) / zoom);
@@ -116,9 +116,10 @@ public class Fractal {
 	}
 
 	public String getName() {
-		return "";
+		return "Fractal";
 	}
 
+	// Returns a document of information about the fractal settings
 	public String toString() {
 		return 	"[location]\n"+
 				"(%.6f, %.6fi)\n".formatted(posX + (imageWidth / imageSize / pxSize / 2) * zoom,- (posY + (imageHeight / imageSize / pxSize / 2) * zoom)) +
@@ -136,7 +137,7 @@ public class Fractal {
 				"wheel + ctrl: pixel size\n" +
 				"wheel + alt: power\n" +
 				"wheel + shift: n\n" +
-				"1 - 8: palette\n" +
+				"0 - 9: palette\n" +
 				"Q W E keys: render mode\n" +
 				"M: use mouse\n" +
 				"L: lock mouse\n" +

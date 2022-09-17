@@ -1,8 +1,15 @@
 package fractal;
 
+import graphics.ColorInterpolation;
 import math.ComplexNumber;
 
 public class Alfaro extends Fractal {
+	public Alfaro() {
+		n = 30;
+		colorPalette = ColorInterpolation.ColorMode.PURPLE;
+		exp = 3;
+	}
+
 	public int escapesSet(ComplexNumber c, ComplexNumber z, int n) {
 		if (n == 0)
 			return 0;
