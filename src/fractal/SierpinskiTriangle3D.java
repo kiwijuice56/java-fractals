@@ -1,6 +1,7 @@
 package fractal;
 
 import graphics.ColorInterpolation;
+import graphics.DrawingPanel;
 import math.Vector;
 
 import java.awt.*;
@@ -31,11 +32,11 @@ public class SierpinskiTriangle3D extends Fractal {
 
     }
 
-    public void draw(Graphics g) {
+    public void draw(DrawingPanel d) {
         // Slowly rotate the pyramid
-        rotation.x += 0.0001;
-        rotation.y += 0.0002;
-        rotation.z += 0.0005;
+        rotation.x += 0.0004;
+        rotation.y += 0.0007;
+        rotation.z += 0.0015;
 
         // Get the initial triangle points
         Vector v1 = rotatePoint(new Vector(0.5, Math.sqrt(0.75), Math.sqrt(0.75) /2));
@@ -48,11 +49,10 @@ public class SierpinskiTriangle3D extends Fractal {
         v3 = v3.add(new Vector(-posX, -posY, 3));
         v4 = v4.add(new Vector(-posX, -posY, 3));
 
-        g.setColor(ColorInterpolation.getGradientColor(colorPalette, 256, 128));
-        drawRecursive(g, v1, v2, v3, v4, n - 1);
+        drawRecursive(d, v1, v2, v3, v4, n - 1);
     }
 
-    private void drawRecursive(Graphics g, Vector v1, Vector v2, Vector v3, Vector v4, int n) {
+    private void drawRecursive(DrawingPanel d, Vector v1, Vector v2, Vector v3, Vector v4, int n) {
         if (n == 0) {
             // Move to center to prevent wonky scaling near edges of screen
             // Does make coordinates inaccurate, but that's okay
@@ -64,14 +64,14 @@ public class SierpinskiTriangle3D extends Fractal {
             Vector pv4 = v4.project().scale(imageSize / zoom).add(offset);
 
             // Set color depending on direction of light and triangle normal
-            g.setColor(ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v1, v2, v3).dot(light))));
-            fillTriangle(g, pv1, pv2, pv3);
-            g.setColor(ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v1, v2, v4).dot(light))));
-            fillTriangle(g, pv1, pv2, pv4);
-            g.setColor(ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v1, v3, v4).dot(light))));
-            fillTriangle(g, pv1, pv3, pv4);
-            g.setColor(ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v4, v3, v2).dot(light))));
-            fillTriangle(g, pv2, pv3, pv4);
+            Color c = ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v1, v2, v3).dot(light)));
+            fillTriangle(d, c, pv1, pv2, pv3);
+            c = ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v1, v2, v4).dot(light)));
+            fillTriangle(d, c, pv1, pv2, pv4);
+            c = ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v1, v3, v4).dot(light)));
+            fillTriangle(d, c, pv1, pv3, pv4);
+            c = ColorInterpolation.getGradientColor(colorPalette, 256, 128 + (int) (128 * calculateNormal(v4, v3, v2).dot(light)));
+            fillTriangle(d, c, pv2, pv3, pv4);
         } else {
             Vector i1 = v1.average(v2);
             Vector i2 = v2.average(v3);
@@ -81,15 +81,15 @@ public class SierpinskiTriangle3D extends Fractal {
             Vector i5 = v1.average(v4);
             Vector i6 = v2.average(v4);
 
-            drawRecursive(g, i1, v2, i2, i6, n-1);
-            drawRecursive(g, i3, i2, v3, i4, n-1);
-            drawRecursive(g, v1, i1, i3, i5, n-1);
-            drawRecursive(g, i5, i6, i4, v4, n-1);
+            drawRecursive(d, i1, v2, i2, i6, n-1);
+            drawRecursive(d, i3, i2, v3, i4, n-1);
+            drawRecursive(d, v1, i1, i3, i5, n-1);
+            drawRecursive(d, i5, i6, i4, v4, n-1);
         }
     }
 
     // Taken from my 3D engine
-    public void fillTriangle(Graphics g, Vector p1, Vector p2, Vector p3) {
+    public void fillTriangle(DrawingPanel d, Color c, Vector p1, Vector p2, Vector p3) {
         // Sort points by y order with bubble sort
         if (p1.y > p2.y) {
             Vector temp = p1; p1 = p2; p2 = temp;
@@ -144,7 +144,7 @@ public class SierpinskiTriangle3D extends Fractal {
 
                 depthBuffer[(int) y][(int) x] = z;
 
-                g.fillRect((int) x, (int) y, 1, 1);
+                d.drawPixel((int) x, (int) y, c);
             }
         }
 
@@ -180,7 +180,7 @@ public class SierpinskiTriangle3D extends Fractal {
 
                 depthBuffer[(int) y][(int) x] = z;
 
-                g.fillRect((int) x, (int) y, 1, 1);
+                d.drawPixel((int) x, (int) y, c);
             }
         }
     }

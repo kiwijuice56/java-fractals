@@ -1,9 +1,13 @@
+package graphics;
+
 import fractal.Fractal;
-import graphics.ColorInterpolation;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 
 // Contains button interface and controls which fractal is active
 public class DrawingPanel extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener, KeyListener {
@@ -14,6 +18,8 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 
 	// Used to keep track of mouse clicks and drags for scrolling
 	private double initialX = 0, initialY = 0, offsetX, offsetY;
+
+	private byte[] out;
 
 	public DrawingPanel() {
 		addMouseMotionListener(this);
@@ -26,11 +32,14 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		out = new byte[(getWidth() * 3) * (getHeight() * 3)];
 
 		current.setDimensions(getWidth(), getHeight());
-		current.draw(g);
+		current.draw(this);
+
+		BufferedImage outImage = new BufferedImage(getWidth(), getHeight(),  BufferedImage.TYPE_3BYTE_BGR);
+		outImage.setData(Raster.createRaster(outImage.getSampleModel(), new DataBufferByte(out, out.length), new Point()));
+		g.drawImage(outImage, 0, 0, null);
 
 		if (hideText)
 			return;
@@ -144,4 +153,12 @@ public class DrawingPanel extends JPanel implements MouseMotionListener, MouseLi
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 	public void keyTyped(KeyEvent e) {}
+
+	public void drawPixel(int x, int y, Color c) {
+		if (x < 0 || y < 0 || x >= getWidth() || y >= getHeight())
+			return;
+		out[(y) * (getWidth() * 3) + (x * 3)] = (byte) c.getBlue();
+		out[(y) * (getWidth() * 3) + (x * 3 + 1)] = (byte) c.getGreen();
+		out[(y) * (getWidth() * 3) + (x * 3 + 2)] = (byte) c.getRed();
+	}
 }

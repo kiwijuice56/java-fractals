@@ -1,9 +1,8 @@
 package fractal;
 
 import graphics.ColorInterpolation;
+import graphics.DrawingPanel;
 import math.ComplexNumber;
-
-import java.awt.*;
 
 public class Fractal {
 	// Due to the small scale of the program, most variables are public/protected for convenience
@@ -31,15 +30,15 @@ public class Fractal {
 	public ColorInterpolation.ColorMode colorPalette = ColorInterpolation.ColorMode.ROYAL;
 
 	// Called by external panels to paint the fractal
-	public void draw(Graphics g) {
+	public void draw(DrawingPanel d) {
 		if (currentDrawMode == DrawMode.NORMAL)
-			drawNormal(g);
+			drawNormal(d);
 		else
-			drawProbabilityPlot(g);
+			drawProbabilityPlot(d);
 	}
 
 	// Normal rendering method that iterates through each px and uses the # steps to escape the set for coloring
-	private void drawNormal(Graphics g) {
+	private void drawNormal(DrawingPanel d) {
 		for (int i = 0; i < imageHeight / pxSize; i++) {
 			for (int j = 0; j < imageWidth / pxSize; j++) {
 				double y = posY + zoom * i / imageSize;
@@ -49,16 +48,13 @@ public class Fractal {
 				// Don't color steps that did not escape
 				if (steps == n)
 					continue;
-				if (currentDrawMode == DrawMode.NORMAL) {
-					g.setColor(ColorInterpolation.getGradientColor(colorPalette, n, steps));
-					g.fillRect(j * pxSize, i * pxSize, pxSize, pxSize);
-				}
+				d.drawPixel(j * pxSize, i * pxSize, ColorInterpolation.getGradientColor(colorPalette, n, steps));
 			}
 		}
 	}
 
 	// Plot rendering method that takes a random sample of points and plots their trajectories
-	private void drawProbabilityPlot(Graphics g) {
+	private void drawProbabilityPlot(DrawingPanel d) {
 		highestVisitCount = 0;
 		visitedCount = new int[imageHeight][imageWidth];
 		for (int p = 0; p < POINT_PLOT_COUNT; p++) {
@@ -68,12 +64,9 @@ public class Fractal {
 			escapesSet(new ComplexNumber(useMousePos ? mouseX : x, useMousePos ? mouseY : y), new ComplexNumber(x, y), n);
 		}
 
-		for (int i = 0; i < imageHeight; i++) {
-			for (int j = 0; j < imageWidth; j++) {
-				g.setColor(ColorInterpolation.getGradientColor(colorPalette, highestVisitCount, visitedCount[i][j]));
-				g.fillRect(j * pxSize, i * pxSize, pxSize, pxSize);
-			}
-		}
+		for (int i = 0; i < imageHeight; i++)
+			for (int j = 0; j < imageWidth; j++)
+				d.drawPixel(j * pxSize, i * pxSize, ColorInterpolation.getGradientColor(colorPalette, highestVisitCount, visitedCount[i][j]));
 	}
 
 	// Recursive function to check if the fractal goes to infinity

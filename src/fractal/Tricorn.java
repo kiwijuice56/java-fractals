@@ -3,8 +3,8 @@ package fractal;
 import graphics.ColorInterpolation;
 import math.ComplexNumber;
 
-public class TricornDrawer extends Fractal {
-	public TricornDrawer() {
+public class Tricorn extends Fractal {
+	public Tricorn() {
 		colorPalette = ColorInterpolation.ColorMode.BLACK;
 	}
 

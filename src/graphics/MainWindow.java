@@ -1,3 +1,5 @@
+package graphics;
+
 import fractal.*;
 
 import java.awt.*;
@@ -30,7 +32,7 @@ public class MainWindow extends JFrame {
         fractalDrawers.add(new SierpinskiTriangle());
         fractalDrawers.add(new SierpinskiTriangle3D());
         fractalDrawers.add(new Tadpole());
-        fractalDrawers.add(new TricornDrawer());
+        fractalDrawers.add(new Tricorn());
 
         DrawingPanel drawingPanel = new DrawingPanel();
         drawingPanel.current = fractalDrawers.get(6);

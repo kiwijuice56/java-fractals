@@ -1,8 +1,7 @@
 package fractal;
 
 import graphics.ColorInterpolation;
-
-import java.awt.*;
+import graphics.DrawingPanel;
 
 public class Mandelbox extends Fractal {
 	// POINT_SIZE is the resolution to iterate through the box points
@@ -19,23 +18,20 @@ public class Mandelbox extends Fractal {
 		n = 6;
 	}
 
-	public void draw(Graphics g) {
+	public void draw(DrawingPanel d) {
 		z += POINT_SIZE;
 
 		if (z > BOX_SIZE)
 			z = -BOX_SIZE;
 
-		int renderPxSize = (int) (EXTRA_PIXEL_SCALE * POINT_SIZE * imageSize * pxSize);
-
 		for (double y = -BOX_SIZE; y < BOX_SIZE; y += POINT_SIZE) {
 			for (double x = -BOX_SIZE; x < BOX_SIZE; x += POINT_SIZE) {
-				boolean d = escapesSet(new double[] {x, y, z}, new double[] {x, y, z}, 2.0, 0.5, n);
-				if (d)
+				if (escapesSet(new double[] {x, y, z}, new double[] {x, y, z}, 2.0, 0.5, n))
 					continue;
 				double pX = (x / (-z + BOX_SIZE + 1) - posX) * imageSize / zoom;
 				double pY = (y / (-z + BOX_SIZE + 1) - posY) * imageSize / zoom;
-				g.setColor(ColorInterpolation.getGradientColor(colorPalette, (int) (BOX_SIZE * 128), (int) (64 * (z + BOX_SIZE))));
-				g.fillRect((int) (pX * pxSize), (int) (pY * pxSize), renderPxSize, renderPxSize);
+
+				d.drawPixel((int) (pX * pxSize), (int) (pY * pxSize), ColorInterpolation.getGradientColor(colorPalette, (int) (BOX_SIZE * 128), (int) (64 * (z + BOX_SIZE))));
 
 			}
 		}

@@ -1,10 +1,10 @@
 package fractal;
 
 import graphics.ColorInterpolation;
+import graphics.DrawingPanel;
 import math.ComplexNumber;
 import math.Polynomial;
 
-import java.awt.Graphics;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class Newton extends Fractal {
 	private double tolerance = 0.000001;
 
 	public Newton() {
-		n = 32;
+		n = 64;
 		posX = -1.5;
 		posY = 0.0;
 
@@ -27,7 +27,7 @@ public class Newton extends Fractal {
 				new ComplexNumber(-0.5, -Math.sqrt(3) / 2.0));
 	}
 
-	public void draw(Graphics g) {
+	public void draw(DrawingPanel d) {
 		for (int i = 0; i < imageHeight / pxSize; i++) {
 			for (int j = 0; j < imageWidth / pxSize; j++) {
 				double y = posY + zoom * i / imageSize;
@@ -36,8 +36,7 @@ public class Newton extends Fractal {
 				int steps = approachesRoots(new ComplexNumber(x, y), n);
 				if (steps == n)
 					continue;
-				g.setColor(ColorInterpolation.getGradientColor(colorPalette, n, steps));
-				g.fillRect(j * pxSize, i * pxSize, pxSize, pxSize);
+				d.drawPixel(j * pxSize, i * pxSize, ColorInterpolation.getGradientColor(colorPalette, n, steps));
 			}
 		}
 	}
